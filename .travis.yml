@@ -5,13 +5,13 @@ before_install:
 deploy:
   true:
     condition: $TRAVIS_PYTHON_VERSION == "2.7"
-    repo: tartavull/dataprovider
+    repo: jingpengw/patchprovider
     tags: true
   distributions: sdist
   password:
     secure: oHOJuD3+cYD06WOJPEc8E6cf920ALiTEeNKhSR9Ms/x3WMDSk8ydS+YYsTB2QHlF40qrsAxOOJoySCMLd0ngJ604Oo4Q9NRFZXaHXK3eEq1633GWhwcp0xAfpb4Ow/qxvsEls4y97BjD9uUrhkXBA6zPpy0Ny5IIkS0UfiPYsAFkrbmI8pDQAx1InVGmDIt/HOGiFjdd3OEwbt7pAjogoboyMMf2kj1T9enUQ8PgQWvIKxJImT+ODm7hzeTbqOx2jXA8vNfeTHiD3HS8e3XI0AH3Da5t6Z3FD697KYdN5UqS+qr76rixTg3SkZmZdyNh5IxabHdu2diZhy8qkO16SNL0kUpcTDCm717Psg0Tj0//SUuQosyRODfrg7D4hOwWXvKZSEAQ9FBAwtje+ZyElMkn0LS363qVERMhXGUsFVf0yrvH7lGvps3WHTkMLwHpw5z/gfh0nf51lXobklBjpyWVBJECSX5N77O8IEr4/6QMPnYRUIFZhb7t6lNLXwxzn8oC4XwYN8asbeG4pFyaq/iBa/pHMtpatMR72tAd09BTsBK8XkMScvKytiSgdIp5TQFcv4Rrwpm0DE3XHXP7f6ja1FG6z+LuaCKiPQewhhgdmrwPywm4HJxFe7ZsZOIbTdWFoLmFyH1hJ3YDprwogjNBWHuRXbb7Gdof1aAv2l0=
   provider: pypi
-  user: tartavull
+  user: jingpengw 
 install:
 - python setup.py install
 language: python

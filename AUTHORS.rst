@@ -10,3 +10,4 @@ Development Lead
 Contributors
 ------------
 * Ignacio Tartavull <tartavull@gmail.com>
+* Jingpeng Wu <jingpeng@princeton.edu>

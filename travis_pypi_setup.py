@@ -21,7 +21,7 @@ except:
     from urllib.request import urlopen
 
 
-GITHUB_REPO = 'tartavull/dataprovider'
+GITHUB_REPO = 'jingpengw/patchprovider'
 TRAVIS_CONFIG_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '.travis.yml')
 
@@ -52,7 +52,7 @@ def encrypt(pubkey, password):
     return base64.b64encode(encrypted_password)
 
 
-def fetch_public_key(repo):
+d ef fetch_public_key(repo):
     """Download RSA public key Travis will use for this repo.
 
     Travis API docs: http://docs.travis-ci.com/api/#repository-keys
@@ -66,7 +66,7 @@ def fetch_public_key(repo):
     return data['key']
 
 
-def prepend_line(filepath, line):
+de f prepend_line(filepath, line):
     """Rewrite a file adding a line to its beginning.
     """
     with open(filepath) as f:
