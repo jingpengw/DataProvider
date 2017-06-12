@@ -23,21 +23,21 @@ test_requirements = [
 ]
 
 setup(
-    name='dataprovider',
+    name='patchprovider',
     version='0.1.6',
     description="Deep learning platform-independent volumetric data provider for training 3D convolutional network.",
     long_description=readme + '\n\n' + history,
     author="Seung Lab",
-    author_email='tartavull@gmail.com',
-    url='https://github.com/tartavull/dataprovider',
+    author_email='jingpeng.wu@gmail.com',
+    url='https://github.com/jingpengw/patchprovider',
     packages=[
-        'dataprovider',
+        'patchprovider',
     ],
-    package_dir={'dataprovider':
-                 'dataprovider'},
+    package_dir={'patchprovider':
+                 'patchprovider'},
     entry_points={
         'console_scripts': [
-            'dataprovider=dataprovider.cli:main'
+            'patchprovider=patchprovider.cli:main'
         ]
     },
     include_package_data=True,
@@ -48,7 +48,7 @@ setup(
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='dataprovider',
+    keywords='patchprovider',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -64,5 +64,5 @@ setup(
     ],
     test_suite='tests',
     tests_require=test_requirements,
-    ext_modules=cythonize([Extension('*', ['dataprovider/warping/*.pyx'])])
+    ext_modules=cythonize([Extension('*', ['patchprovider/warping/*.pyx'])])
 )
