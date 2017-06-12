@@ -1,0 +1,1086 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dataprovider package &mdash; DataProvider 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="DataProvider 0.1.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DataProvider
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">DataProvider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">DataProvider</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>dataprovider package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/dataprovider.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dataprovider-package">
+<h1>dataprovider package<a class="headerlink" href="#dataprovider-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dataprovider.warping.html">dataprovider.warping package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dataprovider.warping.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataprovider.warping.html#dataprovider-warping-warping-module">dataprovider.warping.warping module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataprovider.warping.html#module-dataprovider.warping">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dataprovider.blend">
+<span id="dataprovider-blend-module"></span><h2>dataprovider.blend module<a class="headerlink" href="#module-dataprovider.blend" title="Permalink to this headline">¶</a></h2>
+<p>Inference outputs.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="class">
+<dt id="dataprovider.blend.Blend">
+<em class="property">class </em><code class="descclassname">dataprovider.blend.</code><code class="descname">Blend</code><span class="sig-paren">(</span><em>spec</em>, <em>locs</em>, <em>blend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/blend.html#Blend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.blend.Blend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Blend interface.</p>
+<dl class="method">
+<dt id="dataprovider.blend.Blend.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/blend.html#Blend.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.blend.Blend.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get inference output data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.blend.Blend.push">
+<code class="descname">push</code><span class="sig-paren">(</span><em>loc</em>, <em>sample</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/blend.html#Blend.push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.blend.Blend.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write to data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dataprovider.blend.BumpBlend">
+<em class="property">class </em><code class="descclassname">dataprovider.blend.</code><code class="descname">BumpBlend</code><span class="sig-paren">(</span><em>spec</em>, <em>locs</em>, <em>blend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/blend.html#BumpBlend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.blend.BumpBlend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dataprovider.blend.Blend" title="dataprovider.blend.Blend"><code class="xref py py-class docutils literal"><span class="pre">dataprovider.blend.Blend</span></code></a></p>
+<p>Blending with bump function.</p>
+<dl class="method">
+<dt id="dataprovider.blend.BumpBlend.push">
+<code class="descname">push</code><span class="sig-paren">(</span><em>loc</em>, <em>sample</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/blend.html#BumpBlend.push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.blend.BumpBlend.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blend with data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.blend.prepare_outputs">
+<code class="descclassname">dataprovider.blend.</code><code class="descname">prepare_outputs</code><span class="sig-paren">(</span><em>spec</em>, <em>locs</em>, <em>blend=False</em>, <em>blend_mode=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/blend.html#prepare_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.blend.prepare_outputs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.box">
+<span id="dataprovider-box-module"></span><h2>dataprovider.box module<a class="headerlink" href="#module-dataprovider.box" title="Permalink to this headline">¶</a></h2>
+<p>3D Box class.</p>
+<p>Box &#8211; two vectors, forming a box</p>
+<p>Modified the code from
+<a class="reference external" href="https://wiki.python.org/moin/PointsAndRectangles">https://wiki.python.org/moin/PointsAndRectangles</a></p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2015-2016</p>
+<dl class="class">
+<dt id="dataprovider.box.Box">
+<em class="property">class </em><code class="descclassname">dataprovider.box.</code><code class="descname">Box</code><span class="sig-paren">(</span><em>v1_or_box</em>, <em>v2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A 3D box identified by two vectors.</p>
+<p>set_coords       &#8211; reset box coordinates
+contains         &#8211; is a point inside?
+overlaps         &#8211; does a box overlap?
+intersect        &#8211; intersection between two boxes, if exist
+merge            &#8211; merge two boxes
+min              &#8211; get min corner point vector
+max              &#8211; get max corner point vector
+expand_by        &#8211; in-place grow (or shrink)
+expanded_by      &#8211; grow (or shrink)</p>
+<dl class="method">
+<dt id="dataprovider.box.Box.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if a point is inside the box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.expand_by">
+<code class="descname">expand_by</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.expand_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.expand_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>In-place expansion by v.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.expanded_by">
+<code class="descname">expanded_by</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.expanded_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.expanded_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a box with extended borders.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return intersection between this and other box, if overlaps.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.max">
+<code class="descname">max</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.max"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the max corner as a vector.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.merge">
+<code class="descname">merge</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return merge of this and other box. Two boxes need not overlap.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.min">
+<code class="descname">min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.min"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the min corner as a vector.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.overlaps">
+<code class="descname">overlaps</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.overlaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if a box overlaps this box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.set_coords">
+<code class="descname">set_coords</code><span class="sig-paren">(</span><em>v1</em>, <em>v2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.set_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.set_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the box coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.size">
+<code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.box.Box.translate">
+<code class="descname">translate</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#Box.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.Box.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.box.centered_box">
+<code class="descclassname">dataprovider.box.</code><code class="descname">centered_box</code><span class="sig-paren">(</span><em>c</em>, <em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/box.html#centered_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.box.centered_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a box of size s centered on c.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.cli">
+<span id="dataprovider-cli-module"></span><h2>dataprovider.cli module<a class="headerlink" href="#module-dataprovider.cli" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dataprovider.config_data">
+<span id="dataprovider-config-data-module"></span><h2>dataprovider.config_data module<a class="headerlink" href="#module-dataprovider.config_data" title="Permalink to this headline">¶</a></h2>
+<p>ConfigData classes.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="class">
+<dt id="dataprovider.config_data.ConfigData">
+<em class="property">class </em><code class="descclassname">dataprovider.config_data.</code><code class="descname">ConfigData</code><span class="sig-paren">(</span><em>config</em>, <em>section</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/config_data.html#ConfigData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.config_data.ConfigData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dataprovider.tensor.TensorData" title="dataprovider.tensor.TensorData"><code class="xref py py-class docutils literal"><span class="pre">dataprovider.tensor.TensorData</span></code></a></p>
+<p>ConfigData class.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dataprovider.config_data.ConfigLabel">
+<em class="property">class </em><code class="descclassname">dataprovider.config_data.</code><code class="descname">ConfigLabel</code><span class="sig-paren">(</span><em>config</em>, <em>section</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/config_data.html#ConfigLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.config_data.ConfigLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dataprovider.config_data.ConfigData" title="dataprovider.config_data.ConfigData"><code class="xref py py-class docutils literal"><span class="pre">dataprovider.config_data.ConfigData</span></code></a></p>
+<p>ConfigLabel class.</p>
+<dl class="method">
+<dt id="dataprovider.config_data.ConfigLabel.get_transform">
+<code class="descname">get_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/config_data.html#ConfigLabel.get_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.config_data.ConfigLabel.get_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dataprovider-data-augmentation-module">
+<h2>dataprovider.data_augmentation module<a class="headerlink" href="#dataprovider-data-augmentation-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="dataprovider-data-provider-module">
+<h2>dataprovider.data_provider module<a class="headerlink" href="#dataprovider-data-provider-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dataprovider.dataprovider">
+<span id="dataprovider-dataprovider-module"></span><h2>dataprovider.dataprovider module<a class="headerlink" href="#module-dataprovider.dataprovider" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dataprovider.dataset">
+<span id="dataprovider-dataset-module"></span><h2>dataprovider.dataset module<a class="headerlink" href="#module-dataprovider.dataset" title="Permalink to this headline">¶</a></h2>
+<p>Dataset classes.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="class">
+<dt id="dataprovider.dataset.Dataset">
+<em class="property">class </em><code class="descclassname">dataprovider.dataset.</code><code class="descname">Dataset</code><a class="reference internal" href="_modules/dataprovider/dataset.html#Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Dataset interface.</p>
+<dl class="method">
+<dt id="dataprovider.dataset.Dataset.next_sample">
+<code class="descname">next_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#Dataset.next_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.Dataset.next_sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.Dataset.random_sample">
+<code class="descname">random_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#Dataset.random_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.Dataset.random_sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dataprovider.dataset.VolumeDataset">
+<em class="property">class </em><code class="descclassname">dataprovider.dataset.</code><code class="descname">VolumeDataset</code><span class="sig-paren">(</span><em>config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dataprovider.dataset.Dataset" title="dataprovider.dataset.Dataset"><code class="xref py py-class docutils literal"><span class="pre">dataprovider.dataset.Dataset</span></code></a></p>
+<p>Dataset for volumetric data.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first docutils">
+<dt>_data:  Dictionary mapping layer&#8217;s name to TensorData, which contains</dt>
+<dd>4D volumetric data (e.g. EM image stacks, label stacks, etc.).</dd>
+</dl>
+<p>_label: List of label layer&#8217;s name.</p>
+<dl class="docutils">
+<dt>_spec:  Net specification. Dictionary mapping layer&#8217;s name to its input</dt>
+<dd>dimension (either 3-tuple or 4-tuple).</dd>
+<dt>_range: Range of valid coordinates for accessing data given a net spec.</dt>
+<dd>It depends both on data and net specs.</dd>
+</dl>
+<p class="last">params: Dataset-specific parameters.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.build_from_config">
+<code class="descname">build_from_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.build_from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.build_from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build dataset from a ConfiParser object generated by Parser&#8217;s
+parse_dataset method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.get_imgs">
+<code class="descname">get_imgs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.get_imgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.get_imgs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.get_range">
+<code class="descname">get_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.get_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.get_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return valid range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.get_sample">
+<code class="descname">get_sample</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.get_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.get_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a sample centered on pos.</p>
+<p>Every data in the sample is guaranteed to be center-aligned.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>pos: Center coordinate of the sample.</dd>
+<dt>Returns:</dt>
+<dd><p class="first">sample:     Dictionary mapping input layer&#8217;s name to data.
+transform:  Dictionary mapping label layer&#8217;s name to the type of</p>
+<blockquote class="last">
+<div>label transformation specified by user.</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.get_spec">
+<code class="descname">get_spec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.get_spec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.get_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return dataset spec.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.next_sample">
+<code class="descname">next_sample</code><span class="sig-paren">(</span><em>spec=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.next_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.next_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch next sample in a sample sequence.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.num_sample">
+<code class="descname">num_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.num_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.num_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of samples in valid range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.random_sample">
+<code class="descname">random_sample</code><span class="sig-paren">(</span><em>spec=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.random_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.random_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch sample randomly</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.dataset.VolumeDataset.set_spec">
+<code class="descname">set_spec</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/dataset.html#VolumeDataset.set_spec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.dataset.VolumeDataset.set_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set spec and update valid range.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.emio">
+<span id="dataprovider-emio-module"></span><h2>dataprovider.emio module<a class="headerlink" href="#module-dataprovider.emio" title="Permalink to this headline">¶</a></h2>
+<p>Created on Wed Jan 28 14:27:31 2015</p>
+<p>&#64;author: jingpeng</p>
+<dl class="function">
+<dt id="dataprovider.emio.imread">
+<code class="descclassname">dataprovider.emio.</code><code class="descname">imread</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/emio.html#imread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.emio.imread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read volumetirc data.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>fname: Name of the file to read (hdf5 or tiff).</dd>
+<dt>Returns:</dt>
+<dd>data: Numpy 3D or 4D array.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.emio.imsave">
+<code class="descclassname">dataprovider.emio.</code><code class="descname">imsave</code><span class="sig-paren">(</span><em>data</em>, <em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/emio.html#imsave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.emio.imsave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save volumetric data.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>data: Numpy array to save.
+fname: Name of the file to save (hdf5 or tiff).</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.forward">
+<span id="dataprovider-forward-module"></span><h2>dataprovider.forward module<a class="headerlink" href="#module-dataprovider.forward" title="Permalink to this headline">¶</a></h2>
+<p>ForwardScanner.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="class">
+<dt id="dataprovider.forward.ForwardScanner">
+<em class="property">class </em><code class="descclassname">dataprovider.forward.</code><code class="descname">ForwardScanner</code><span class="sig-paren">(</span><em>dataset</em>, <em>scan_spec</em>, <em>params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/forward.html#ForwardScanner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.forward.ForwardScanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>ForwardScanner.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>dataset:
+scan_spec:
+params:</dd>
+</dl>
+<dl class="method">
+<dt id="dataprovider.forward.ForwardScanner.pull">
+<code class="descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/forward.html#ForwardScanner.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.forward.ForwardScanner.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.forward.ForwardScanner.push">
+<code class="descname">push</code><span class="sig-paren">(</span><em>sample</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/forward.html#ForwardScanner.push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.forward.ForwardScanner.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>sample:
+kwargs:</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.label_transform">
+<span id="dataprovider-label-transform-module"></span><h2>dataprovider.label_transform module<a class="headerlink" href="#module-dataprovider.label_transform" title="Permalink to this headline">¶</a></h2>
+<p>Label transform functions.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2015-2016</p>
+<dl class="class">
+<dt id="dataprovider.label_transform.LabelFunction">
+<em class="property">class </em><code class="descclassname">dataprovider.label_transform.</code><code class="descname">LabelFunction</code><a class="reference internal" href="_modules/dataprovider/label_transform.html#LabelFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.label_transform.LabelFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>TODO(kisuk): Documentation.</p>
+<dl class="method">
+<dt id="dataprovider.label_transform.LabelFunction.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>sample</em>, <em>key</em>, <em>spec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/label_transform.html#LabelFunction.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.label_transform.LabelFunction.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.label_transform.affinitize">
+<code class="descclassname">dataprovider.label_transform.</code><code class="descname">affinitize</code><span class="sig-paren">(</span><em>sample</em>, <em>key</em>, <em>rebalancing=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/label_transform.html#affinitize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.label_transform.affinitize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfrom segmentation to 3D affinity graph.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.label_transform.binarize">
+<code class="descclassname">dataprovider.label_transform.</code><code class="descname">binarize</code><span class="sig-paren">(</span><em>sample</em>, <em>key</em>, <em>rebalancing=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/label_transform.html#binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.label_transform.binarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binarize label.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.label_transform.binary_class">
+<code class="descclassname">dataprovider.label_transform.</code><code class="descname">binary_class</code><span class="sig-paren">(</span><em>sample</em>, <em>key</em>, <em>rebalancing=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/label_transform.html#binary_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.label_transform.binary_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.label_transform.multiclass_expansion">
+<code class="descclassname">dataprovider.label_transform.</code><code class="descname">multiclass_expansion</code><span class="sig-paren">(</span><em>sample</em>, <em>key</em>, <em>N</em>, <em>rebalancing=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/label_transform.html#multiclass_expansion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.label_transform.multiclass_expansion" title="Permalink to this definition">¶</a></dt>
+<dd><p>For semantic segmentation.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.misalign">
+<span id="dataprovider-misalign-module"></span><h2>dataprovider.misalign module<a class="headerlink" href="#module-dataprovider.misalign" title="Permalink to this headline">¶</a></h2>
+<p>Misalignment data augmentation.</p>
+<p>Karan Kathpalia &lt;<a class="reference external" href="mailto:karank&#37;&#52;&#48;cs&#46;princeton&#46;edu">karank<span>&#64;</span>cs<span>&#46;</span>princeton<span>&#46;</span>edu</a>&gt;
+Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="class">
+<dt id="dataprovider.misalign.MisalignAugment">
+<em class="property">class </em><code class="descclassname">dataprovider.misalign.</code><code class="descname">MisalignAugment</code><span class="sig-paren">(</span><em>max_trans=15.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/misalign.html#MisalignAugment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.misalign.MisalignAugment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">dataprovider.data_augmentation.DataAugment</span></code></p>
+<p>Misalignment.</p>
+<dl class="method">
+<dt id="dataprovider.misalign.MisalignAugment.augment">
+<code class="descname">augment</code><span class="sig-paren">(</span><em>sample</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/misalign.html#MisalignAugment.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.misalign.MisalignAugment.augment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply misalignment data augmentation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.misalign.MisalignAugment.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><em>spec</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/misalign.html#MisalignAugment.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.misalign.MisalignAugment.prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.misalign.MisalignAugment.set_max_translation">
+<code class="descname">set_max_translation</code><span class="sig-paren">(</span><em>max_trans</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/misalign.html#MisalignAugment.set_max_translation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.misalign.MisalignAugment.set_max_translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum amount of translation in x and y.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.parser">
+<span id="dataprovider-parser-module"></span><h2>dataprovider.parser module<a class="headerlink" href="#module-dataprovider.parser" title="Permalink to this headline">¶</a></h2>
+<p>DataSpecParser class.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="class">
+<dt id="dataprovider.parser.Parser">
+<em class="property">class </em><code class="descclassname">dataprovider.parser.</code><code class="descname">Parser</code><span class="sig-paren">(</span><em>dspec_path</em>, <em>net_spec</em>, <em>params</em>, <em>auto_mask=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/parser.html#Parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.parser.Parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Parser class.</p>
+<dl class="method">
+<dt id="dataprovider.parser.Parser.parse_data">
+<code class="descname">parse_data</code><span class="sig-paren">(</span><em>config</em>, <em>name</em>, <em>data</em>, <em>idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/parser.html#Parser.parse_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.parser.Parser.parse_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>config:
+name:
+data:
+idx:</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.parser.Parser.parse_dataset">
+<code class="descname">parse_dataset</code><span class="sig-paren">(</span><em>dataset_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/parser.html#Parser.parse_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.parser.Parser.parse_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>dataset_id:</dd>
+<dt>Returns:</dt>
+<dd>dataset: ConfigParser object containing dataset info.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dataprovider-setup-module">
+<h2>dataprovider.setup module<a class="headerlink" href="#dataprovider-setup-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dataprovider.tensor">
+<span id="dataprovider-tensor-module"></span><h2>dataprovider.tensor module<a class="headerlink" href="#module-dataprovider.tensor" title="Permalink to this headline">¶</a></h2>
+<p>Read-only/writable TensorData classes.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2015-2016</p>
+<dl class="class">
+<dt id="dataprovider.tensor.TensorData">
+<em class="property">class </em><code class="descclassname">dataprovider.tensor.</code><code class="descname">TensorData</code><span class="sig-paren">(</span><em>data</em>, <em>fov=(0</em>, <em>0</em>, <em>0)</em>, <em>offset=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Read-only tensor data.</p>
+<p>The 1st dimension is regarded as parallel channels, and arbitrary access
+along this dimension is not allowed. Threfore, every data access should be
+made through 3D vector, not 4D.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>_data:   numpy 4D array (channel,z,y,x)
+_dim:    Dimension of each channel
+_offset: Coordinate offset from the origin
+_bb:     Bounding box
+_fov:    Patch size
+_rg:     Range (update dep.: dim, offset, fov)</dd>
+</dl>
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.bounding_box">
+<code class="descname">bounding_box</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.bounding_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.dim">
+<code class="descname">dim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return channel shape (z,y,x).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.fov">
+<code class="descname">fov</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.fov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.fov" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.get_patch">
+<code class="descname">get_patch</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.get_patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.get_patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a patch of size _fov centered on pos.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.offset">
+<code class="descname">offset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.offset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.range">
+<code class="descname">range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.set_fov">
+<code class="descname">set_fov</code><span class="sig-paren">(</span><em>fov</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.set_fov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.set_fov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a nonnegative field of view (FoV), i.e., patch size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.TensorData.shape">
+<code class="descname">shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#TensorData.shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.TensorData.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return data shape (c,z,y,x).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dataprovider.tensor.WritableTensorData">
+<em class="property">class </em><code class="descclassname">dataprovider.tensor.</code><code class="descname">WritableTensorData</code><span class="sig-paren">(</span><em>data_or_shape</em>, <em>fov=(0</em>, <em>0</em>, <em>0)</em>, <em>offset=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#WritableTensorData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.WritableTensorData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dataprovider.tensor.TensorData" title="dataprovider.tensor.TensorData"><code class="xref py py-class docutils literal"><span class="pre">dataprovider.tensor.TensorData</span></code></a></p>
+<p>Writable tensor data.</p>
+<dl class="method">
+<dt id="dataprovider.tensor.WritableTensorData.set_patch">
+<code class="descname">set_patch</code><span class="sig-paren">(</span><em>pos</em>, <em>patch</em>, <em>op=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#WritableTensorData.set_patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.WritableTensorData.set_patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a patch of size _fov centered on pos.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dataprovider.tensor.WritableTensorDataWithMask">
+<em class="property">class </em><code class="descclassname">dataprovider.tensor.</code><code class="descname">WritableTensorDataWithMask</code><span class="sig-paren">(</span><em>data_or_shape</em>, <em>fov=(0</em>, <em>0</em>, <em>0)</em>, <em>offset=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#WritableTensorDataWithMask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.WritableTensorDataWithMask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dataprovider.tensor.WritableTensorData" title="dataprovider.tensor.WritableTensorData"><code class="xref py py-class docutils literal"><span class="pre">dataprovider.tensor.WritableTensorData</span></code></a></p>
+<p>Writable tensor data with blending mask.</p>
+<dl class="method">
+<dt id="dataprovider.tensor.WritableTensorDataWithMask.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#WritableTensorDataWithMask.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.WritableTensorDataWithMask.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.WritableTensorDataWithMask.get_norm">
+<code class="descname">get_norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#WritableTensorDataWithMask.get_norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.WritableTensorDataWithMask.get_norm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.WritableTensorDataWithMask.get_unnormalized_data">
+<code class="descname">get_unnormalized_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#WritableTensorDataWithMask.get_unnormalized_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.WritableTensorDataWithMask.get_unnormalized_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.tensor.WritableTensorDataWithMask.set_patch">
+<code class="descname">set_patch</code><span class="sig-paren">(</span><em>pos</em>, <em>patch</em>, <em>op='np.add'</em>, <em>mask=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/tensor.html#WritableTensorDataWithMask.set_patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.tensor.WritableTensorDataWithMask.set_patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a patch of size _fov centered on pos.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dataprovider-test-module">
+<h2>dataprovider.test module<a class="headerlink" href="#dataprovider-test-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dataprovider.transform">
+<span id="dataprovider-transform-module"></span><h2>dataprovider.transform module<a class="headerlink" href="#module-dataprovider.transform" title="Permalink to this headline">¶</a></h2>
+<p>Functions for data transformation.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="class">
+<dt id="dataprovider.transform.SampleFunction">
+<em class="property">class </em><code class="descclassname">dataprovider.transform.</code><code class="descname">SampleFunction</code><a class="reference internal" href="_modules/dataprovider/transform.html#SampleFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.SampleFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Apply 3D volume function to every volume in a data sample.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dataprovider.transform.TensorFunction">
+<em class="property">class </em><code class="descclassname">dataprovider.transform.</code><code class="descname">TensorFunction</code><a class="reference internal" href="_modules/dataprovider/transform.html#TensorFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.TensorFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Apply 3D volume function to each channel of 4D tensor.</p>
+<dl class="method">
+<dt id="dataprovider.transform.TensorFunction.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>data</em>, <em>spec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#TensorFunction.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.TensorFunction.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate tensor function specified by spec on data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.affinitize">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">affinitize</code><span class="sig-paren">(</span><em>img</em>, <em>dst=(1</em>, <em>1</em>, <em>1)</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#affinitize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.affinitize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform segmentation to 3D affinity graph.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>img: 3D indexed image, with each index corresponding to each segment.</dd>
+<dt>Returns:</dt>
+<dd>ret: 3D affinity graph (4D tensor), 3 channels for z, y, x direction.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.affinitize_mask">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">affinitize_mask</code><span class="sig-paren">(</span><em>msk</em>, <em>dst=(1</em>, <em>1</em>, <em>1)</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#affinitize_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.affinitize_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform binary mask to affinity mask.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>msk: 3D binary mask.</dd>
+<dt>Returns:</dt>
+<dd>ret: 3D affinity mask (4D tensor), 3 channels for z, y, x direction.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.binarize">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">binarize</code><span class="sig-paren">(</span><em>img</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.binarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binarize image.</p>
+<p>Normally used to turn a ground truth segmentation into a ground truth
+boundary map, binary representation for each voxel being neuronal boundary
+or not.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>img: 3D indexed image, with each index corresponding to each segment.</dd>
+<dt>Returns:</dt>
+<dd>ret: Binarized image.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.binary_class">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">binary_class</code><span class="sig-paren">(</span><em>img</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#binary_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.binary_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.crop">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">crop</code><span class="sig-paren">(</span><em>img</em>, <em>offset=(0</em>, <em>0</em>, <em>0)</em>, <em>size=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#crop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.divideby">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">divideby</code><span class="sig-paren">(</span><em>img</em>, <em>val=255.0</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#divideby"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.divideby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rescale.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.flip">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">flip</code><span class="sig-paren">(</span><em>data</em>, <em>rule</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#flip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.flip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flip data according to a specified rule.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">data: 3D numpy array to be transformed.
+rule: Transform rule, specified as a Boolean array.</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>[z reflection,</dt>
+<dd>y reflection,
+x reflection,
+xy transpose]</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd>data: Transformed data.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.mirror_border">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">mirror_border</code><span class="sig-paren">(</span><em>img</em>, <em>fov</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#mirror_border"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.mirror_border" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk) Documentation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.multiclass_expansion">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">multiclass_expansion</code><span class="sig-paren">(</span><em>img</em>, <em>N</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#multiclass_expansion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.multiclass_expansion" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Semantic segmentation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.rebalance_class">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">rebalance_class</code><span class="sig-paren">(</span><em>img</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#rebalance_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.rebalance_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.rescale">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">rescale</code><span class="sig-paren">(</span><em>img</em>, <em>min_val=0.0</em>, <em>max_val=1.0</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#rescale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.rescale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rescale.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.revert_flip">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">revert_flip</code><span class="sig-paren">(</span><em>data</em>, <em>rule</em>, <em>dst=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#revert_flip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.revert_flip" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO(kisuk): Documentation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dataprovider.transform.sample_func">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">sample_func</code><a class="headerlink" href="#dataprovider.transform.sample_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply 3D volume function to every volume in a data sample.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.standardize">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">standardize</code><span class="sig-paren">(</span><em>img</em>, <em>mode='2D'</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#standardize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.standardize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard normalization (zero mean, unit standard deviation).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dataprovider.transform.tensor_func">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">tensor_func</code><a class="headerlink" href="#dataprovider.transform.tensor_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply 3D volume function to each channel of 4D tensor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.transform.transform_tensor">
+<code class="descclassname">dataprovider.transform.</code><code class="descname">transform_tensor</code><span class="sig-paren">(</span><em>func</em>, <em>data</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/transform.html#transform_tensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.transform.transform_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply func to each channel of data (4D tensor).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.utils">
+<span id="dataprovider-utils-module"></span><h2>dataprovider.utils module<a class="headerlink" href="#module-dataprovider.utils" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions.</p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2016</p>
+<dl class="function">
+<dt id="dataprovider.utils.check_tensor">
+<code class="descclassname">dataprovider.utils.</code><code class="descname">check_tensor</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/utils.html#check_tensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.utils.check_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that data is numpy 4D array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.utils.check_volume">
+<code class="descclassname">dataprovider.utils.</code><code class="descname">check_volume</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/utils.html#check_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.utils.check_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that data is numpy 3D array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.utils.fill_data">
+<code class="descclassname">dataprovider.utils.</code><code class="descname">fill_data</code><span class="sig-paren">(</span><em>shape</em>, <em>filler={'type': 'zero'}</em>, <em>dtype='float32'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/utils.html#fill_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.utils.fill_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return numpy array of shape, filled with specified values.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">shape: Array shape.
+filler: {&#8216;type&#8217;:&#8217;zero&#8217;} (default)</p>
+<blockquote class="last">
+<div>{&#8216;type&#8217;:&#8217;one&#8217;}
+{&#8216;type&#8217;:&#8217;constant&#8217;, &#8216;value&#8217;:%f}
+{&#8216;type&#8217;:&#8217;gaussian&#8217;, &#8216;loc&#8217;:%f, &#8216;scale&#8217;:%f}
+{&#8216;type&#8217;:&#8217;uniform&#8217;, &#8216;low&#8217;:%f, &#8216;high&#8217;:%f}
+{&#8216;type&#8217;:&#8217;randi&#8217;, &#8216;low&#8217;:%d, &#8216;high&#8217;:%d}</div></blockquote>
+</dd>
+<dt>Returs:</dt>
+<dd>data: Numpy array of shape, filled with specified values.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dataprovider.vector">
+<span id="dataprovider-vector-module"></span><h2>dataprovider.vector module<a class="headerlink" href="#module-dataprovider.vector" title="Permalink to this headline">¶</a></h2>
+<p>3D Vector class.</p>
+<p>Modified from the vec3d class on the pygame wiki site.
+<a class="reference external" href="http://pygame.org/wiki/3DVectorClass">http://pygame.org/wiki/3DVectorClass</a></p>
+<p>Kisuk Lee &lt;<a class="reference external" href="mailto:kisuklee&#37;&#52;&#48;mit&#46;edu">kisuklee<span>&#64;</span>mit<span>&#46;</span>edu</a>&gt;, 2015-2016</p>
+<dl class="class">
+<dt id="dataprovider.vector.Vec3d">
+<em class="property">class </em><code class="descclassname">dataprovider.vector.</code><code class="descname">Vec3d</code><span class="sig-paren">(</span><em>x_or_triple</em>, <em>y=None</em>, <em>z=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>3d vector class, supports vector and scalar operators,
+and also provides a bunch of high level functions.
+reproduced from the vec2d class on the pygame wiki site.</p>
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.convert_to_basis">
+<code class="descname">convert_to_basis</code><span class="sig-paren">(</span><em>x_vector</em>, <em>y_vector</em>, <em>z_vector</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.convert_to_basis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.convert_to_basis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.cross">
+<code class="descname">cross</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.cross" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.dot">
+<code class="descname">dot</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.dot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.get_dist_sqrd">
+<code class="descname">get_dist_sqrd</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.get_dist_sqrd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.get_dist_sqrd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.get_distance">
+<code class="descname">get_distance</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.get_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.get_distance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.get_length">
+<code class="descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.get_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.get_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.get_length_sqrd">
+<code class="descname">get_length_sqrd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.get_length_sqrd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.get_length_sqrd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.interpolate_to">
+<code class="descname">interpolate_to</code><span class="sig-paren">(</span><em>v</em>, <em>range</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.interpolate_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.interpolate_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dataprovider.vector.Vec3d.length">
+<code class="descname">length</code><a class="headerlink" href="#dataprovider.vector.Vec3d.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>gets or sets the magnitude of the vector</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.normalize_return_length">
+<code class="descname">normalize_return_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.normalize_return_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.normalize_return_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.normalized">
+<code class="descname">normalized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.normalized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.normalized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dataprovider.vector.Vec3d.projection">
+<code class="descname">projection</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#Vec3d.projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.Vec3d.projection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dataprovider.vector.Vec3d.x">
+<code class="descname">x</code><a class="headerlink" href="#dataprovider.vector.Vec3d.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dataprovider.vector.Vec3d.y">
+<code class="descname">y</code><a class="headerlink" href="#dataprovider.vector.Vec3d.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dataprovider.vector.Vec3d.z">
+<code class="descname">z</code><a class="headerlink" href="#dataprovider.vector.Vec3d.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.vector.maximum">
+<code class="descclassname">dataprovider.vector.</code><code class="descname">maximum</code><span class="sig-paren">(</span><em>v1</em>, <em>v2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#maximum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.maximum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="dataprovider.vector.minimum">
+<code class="descclassname">dataprovider.vector.</code><code class="descname">minimum</code><span class="sig-paren">(</span><em>v1</em>, <em>v2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataprovider/vector.html#minimum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataprovider.vector.minimum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="dataprovider-warp-module">
+<h2>dataprovider.warp module<a class="headerlink" href="#dataprovider-warp-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dataprovider">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dataprovider" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Seung Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dataprovider.box &mdash; DataProvider 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="DataProvider 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> DataProvider
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">DataProvider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">DataProvider</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>dataprovider.box</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dataprovider.box</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="n">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">3D Box class.</span>
+
+<span class="s2">Box -- two vectors, forming a box</span>
+
+<span class="s2">Modified the code from</span>
+<span class="s2">https://wiki.python.org/moin/PointsAndRectangles</span>
+
+<span class="s2">Kisuk Lee &lt;kisuklee@mit.edu&gt;, 2015-2016</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vec3d</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">maximum</span>
+
+<div class="viewcode-block" id="Box"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box">[docs]</a><span class="k">class</span> <span class="nc">Box</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A 3D box identified by two vectors.</span>
+
+<span class="sd">    set_coords       -- reset box coordinates</span>
+<span class="sd">    contains         -- is a point inside?</span>
+<span class="sd">    overlaps         -- does a box overlap?</span>
+<span class="sd">    intersect        -- intersection between two boxes, if exist</span>
+<span class="sd">    merge            -- merge two boxes</span>
+<span class="sd">    min              -- get min corner point vector</span>
+<span class="sd">    max              -- get max corner point vector</span>
+<span class="sd">    expand_by        -- in-place grow (or shrink)</span>
+<span class="sd">    expanded_by      -- grow (or shrink)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1_or_box</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a box from another box or two vectors.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">v2</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_coords</span><span class="p">(</span><span class="n">v1_or_box</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">v1_or_box</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_coords</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="n">v1_or_box</span><span class="p">),</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Box.set_coords"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.set_coords">[docs]</a>    <span class="k">def</span> <span class="nf">set_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reset the box coordinates.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min</span>  <span class="o">=</span> <span class="n">minimum</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max</span>  <span class="o">=</span> <span class="n">maximum</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span></div>
+
+<div class="viewcode-block" id="Box.size"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.contains"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return true if a point is inside the box.&quot;&quot;&quot;</span>
+        <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">y</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">z</span> <span class="o">&lt;=</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.overlaps"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.overlaps">[docs]</a>    <span class="k">def</span> <span class="nf">overlaps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return true if a box overlaps this box.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">y</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">y</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">z</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">z</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.intersect"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.intersect">[docs]</a>    <span class="k">def</span> <span class="nf">intersect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return intersection between this and other box, if overlaps.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="c1"># min/max corners</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_min</span><span class="p">)</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="n">minimum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Box.merge"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return merge of this and other box. Two boxes need not overlap.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># min/max corners</span>
+        <span class="n">vmin</span> <span class="o">=</span> <span class="n">minimum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_min</span><span class="p">)</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.translate"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.translate">[docs]</a>    <span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">+=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">+=</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="Box.min"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.min">[docs]</a>    <span class="k">def</span> <span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the min corner as a vector.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.max"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.max">[docs]</a>    <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the max corner as a vector.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.expand_by"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.expand_by">[docs]</a>    <span class="k">def</span> <span class="nf">expand_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;In-place expansion by v.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">-=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">+=</span> <span class="n">v</span>
+        <span class="k">assert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">y</span> <span class="ow">and</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="o">.</span><span class="n">z</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.expanded_by"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.Box.expanded_by">[docs]</a>    <span class="k">def</span> <span class="nf">expanded_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a box with extended borders.&quot;&quot;&quot;</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">-</span> <span class="n">v</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">+</span> <span class="n">v</span>
+        <span class="k">assert</span> <span class="n">v1</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">v2</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> <span class="n">v1</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">v2</span><span class="o">.</span><span class="n">y</span> <span class="ow">and</span> <span class="n">v1</span><span class="o">.</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">v2</span><span class="o">.</span><span class="n">z</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span></div>
+
+    <span class="c1"># Comparison</span>
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span><span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># String representaion (for printing and debugging)</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;Box (</span><span class="si">%s</span><span class="s2">)-(</span><span class="si">%s</span><span class="s2">)&gt;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%r</span><span class="s2">, </span><span class="si">%r</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span></div>
+
+
+<span class="c1"># helper box functions</span>
+<div class="viewcode-block" id="centered_box"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.box.centered_box">[docs]</a><span class="k">def</span> <span class="nf">centered_box</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a box of size s centered on c.&quot;&quot;&quot;</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">size</span>   <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">half</span>   <span class="o">=</span> <span class="n">size</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">size</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">size</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">size</span><span class="o">.</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">center</span> <span class="o">-</span> <span class="n">half</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">+</span> <span class="n">size</span>
+    <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span></div>
+
+
+<span class="c1">########################################################################</span>
+<span class="c1">## Unit Testing</span>
+<span class="c1">########################################################################</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">unittest</span>
+
+    <span class="c1">####################################################################</span>
+    <span class="k">class</span> <span class="nc">UnitTestBox</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="k">def</span> <span class="nf">testCreationAndAccess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">b1</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">testComparison</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b1</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">b2</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span> <span class="o">==</span> <span class="n">b2</span><span class="p">)</span>
+            <span class="n">b3</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span> <span class="o">!=</span> <span class="n">b3</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">testTranslate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">translate</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">testContains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="ow">not</span> <span class="n">b</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">contains</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="ow">not</span> <span class="n">b</span><span class="o">.</span><span class="n">contains</span><span class="p">((</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">testOverlaps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b1</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">b2</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b2</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">b2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="ow">not</span> <span class="n">b1</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">b2</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">b2</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">b1</span><span class="p">)))</span>
+            <span class="n">b2</span><span class="o">.</span><span class="n">translate</span><span class="p">((</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b2</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">b1</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">testIntersect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b1</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">b2</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">b2</span><span class="o">.</span><span class="n">translate</span><span class="p">((</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span>
+            <span class="n">b3</span> <span class="o">=</span> <span class="n">b1</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b3</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">testMerge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b1</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">b2</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">b3</span> <span class="o">=</span> <span class="n">b1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b3</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+            <span class="n">b4</span> <span class="o">=</span> <span class="n">b3</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">Box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b4</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">testExpand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b1</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">b1</span><span class="o">.</span><span class="n">expand_by</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+            <span class="n">b1</span><span class="o">.</span><span class="n">expand_by</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b1</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">testCenteredBox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">centered_box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">centered_box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">Box</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+
+    <span class="c1">####################################################################</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+
+    <span class="c1">####################################################################</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Seung Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
