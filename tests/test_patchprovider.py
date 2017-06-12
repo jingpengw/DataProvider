@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-test_dataprovider
+test_patchprovider
 ----------------------------------
 
-Tests for `dataprovider` module.
+Tests for `patchprovider` module.
 """
 
 import pytest
@@ -13,11 +13,11 @@ import pytest
 from contextlib import contextmanager
 from click.testing import CliRunner
 
-from dataprovider import dataprovider
-from dataprovider import cli
+from patchprovider import patchprovider
+from patchprovider import cli
 
 
-class TestDataprovider(object):
+class TestPatchprovider(object):
 
     @classmethod
     def setup_class(cls):
@@ -29,7 +29,7 @@ class TestDataprovider(object):
         runner = CliRunner()
         result = runner.invoke(cli.main)
         assert result.exit_code == 0
-        assert 'dataprovider.cli.main' in result.output
+        assert 'patchprovider.cli.main' in result.output
         help_result = runner.invoke(cli.main, ['--help'])
         assert help_result.exit_code == 0
         assert '--help  Show this message and exit.' in help_result.output
