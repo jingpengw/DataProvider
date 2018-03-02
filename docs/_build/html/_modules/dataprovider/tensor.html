@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dataprovider.tensor &mdash; DataProvider 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="DataProvider 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> DataProvider
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">DataProvider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">DataProvider</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>dataprovider.tensor</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dataprovider.tensor</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="n">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Read-only/writable TensorData classes.</span>
+
+<span class="s2">Kisuk Lee &lt;kisuklee@mit.edu&gt;, 2015-2016</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">box</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="TensorData"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData">[docs]</a><span class="k">class</span> <span class="nc">TensorData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read-only tensor data.</span>
+
+<span class="sd">    The 1st dimension is regarded as parallel channels, and arbitrary access</span>
+<span class="sd">    along this dimension is not allowed. Threfore, every data access should be</span>
+<span class="sd">    made through 3D vector, not 4D.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _data:   numpy 4D array (channel,z,y,x)</span>
+<span class="sd">        _dim:    Dimension of each channel</span>
+<span class="sd">        _offset: Coordinate offset from the origin</span>
+<span class="sd">        _bb:     Bounding box</span>
+<span class="sd">        _fov:    Patch size</span>
+<span class="sd">        _rg:     Range (update dep.: dim, offset, fov)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a TensorData object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set immutable attributes.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span>    <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+
+        <span class="c1"># Set bounding box.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bb</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bb</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">)</span>
+
+        <span class="c1"># Set fov (patch size).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_fov</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TensorData.set_fov"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.set_fov">[docs]</a>    <span class="k">def</span> <span class="nf">set_fov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set a nonnegative field of view (FoV), i.e., patch size.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Zero FoV indicates covering the whole volume.</span>
+        <span class="n">fov</span> <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fov</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">):</span>
+            <span class="n">fov</span> <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">)</span>
+
+        <span class="c1"># FoV should be nonnegative, and smaller than data dimension.</span>
+        <span class="k">assert</span> <span class="n">fov</span><span class="o">==</span><span class="n">minimum</span><span class="p">(</span><span class="n">maximum</span><span class="p">(</span><span class="n">fov</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">)</span>
+
+        <span class="c1"># Set FoV.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span> <span class="o">=</span> <span class="n">fov</span>
+
+        <span class="c1"># Update range.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_range</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TensorData.get_patch"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.get_patch">[docs]</a>    <span class="k">def</span> <span class="nf">get_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract a patch of size _fov centered on pos.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check validity.</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rg</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+        <span class="c1"># Local coordinate system</span>
+        <span class="n">loc</span>  <span class="o">=</span> <span class="n">pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span>
+        <span class="n">box</span>  <span class="o">=</span> <span class="n">centered_box</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">)</span>
+        <span class="n">vmin</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[:,</span><span class="n">vmin</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">vmax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                    <span class="n">vmin</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">vmax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                    <span class="n">vmin</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">vmax</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span></div>
+
+    <span class="c1">####################################################################</span>
+    <span class="c1">## Public methods for accessing attributes</span>
+    <span class="c1">####################################################################</span>
+
+<div class="viewcode-block" id="TensorData.get_data"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span></div>
+
+<div class="viewcode-block" id="TensorData.shape"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.shape">[docs]</a>    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return data shape (c,z,y,x).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">shape</span></div>
+
+<div class="viewcode-block" id="TensorData.dim"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.dim">[docs]</a>    <span class="k">def</span> <span class="nf">dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return channel shape (z,y,x).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TensorData.fov"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.fov">[docs]</a>    <span class="k">def</span> <span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TensorData.offset"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.offset">[docs]</a>    <span class="k">def</span> <span class="nf">offset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Vec3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TensorData.bounding_box"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.bounding_box">[docs]</a>    <span class="k">def</span> <span class="nf">bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bb</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TensorData.range"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.TensorData.range">[docs]</a>    <span class="k">def</span> <span class="nf">range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rg</span><span class="p">)</span></div>
+
+    <span class="c1">####################################################################</span>
+    <span class="c1">## Private helper methods.</span>
+    <span class="c1">####################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_check_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Data should be either numpy 3D or 4D array.</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span><span class="o">==</span><span class="mi">3</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span><span class="o">==</span><span class="mi">4</span>
+
+        <span class="c1"># Add channel dimension if data is 3D array.</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="o">...</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">_set_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a valid range for extracting patches.&quot;&quot;&quot;</span>
+        <span class="n">top</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="o">/</span><span class="mi">2</span>                <span class="c1"># Top margin</span>
+        <span class="n">btm</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span> <span class="o">-</span> <span class="n">top</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Bottom margin</span>
+        <span class="n">vmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">+</span> <span class="n">top</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="o">-</span> <span class="n">btm</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rg</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
+
+    <span class="c1"># String representaion (for printing and debugging).</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;TensorData&gt;</span><span class="se">\n</span><span class="s2">shape: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">dim: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">FoV: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">offset: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> \
+               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WritableTensorData"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.WritableTensorData">[docs]</a><span class="k">class</span> <span class="nc">WritableTensorData</span><span class="p">(</span><span class="n">TensorData</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writable tensor data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_or_shape</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a writable tensor data, or create a new tensor of zeros.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_or_shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">TensorData</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_or_shape</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data_or_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+            <span class="n">TensorData</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WritableTensorData.set_patch"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.WritableTensorData.set_patch">[docs]</a>    <span class="k">def</span> <span class="nf">set_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">patch</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a patch of size _fov centered on pos.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rg</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_data</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">patch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">assert</span> <span class="n">dim</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">_fov</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">centered_box</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+
+        <span class="c1"># Local coordinate</span>
+        <span class="n">box</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">)</span>
+        <span class="n">vmin</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">lval</span> <span class="o">=</span> <span class="s1">&#39;self._data[:,vmin[0]:vmax[0],vmin[1]:vmax[1],vmin[2]:vmax[2]]&#39;</span>
+        <span class="n">rval</span> <span class="o">=</span> <span class="s1">&#39;patch&#39;</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">exec</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lval</span><span class="p">,</span> <span class="n">rval</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exec</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=</span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lval</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">lval</span><span class="p">,</span> <span class="n">rval</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="WritableTensorDataWithMask"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.WritableTensorDataWithMask">[docs]</a><span class="k">class</span> <span class="nc">WritableTensorDataWithMask</span><span class="p">(</span><span class="n">WritableTensorData</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writable tensor data with blending mask.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_or_shape</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a writable tensor data, or create a new tensor of zeros.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">WritableTensorData</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_or_shape</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+
+        <span class="c1"># Set norm.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span> <span class="o">=</span> <span class="n">WritableTensorData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">(),</span> <span class="n">fov</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WritableTensorDataWithMask.set_patch"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.WritableTensorDataWithMask.set_patch">[docs]</a>    <span class="k">def</span> <span class="nf">set_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">patch</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;np.add&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a patch of size _fov centered on pos.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Default mask.</span>
+        <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">patch</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+        <span class="c1"># Set patch.</span>
+        <span class="n">WritableTensorData</span><span class="o">.</span><span class="n">set_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">mask</span><span class="o">*</span><span class="n">patch</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+        <span class="c1"># Set normalization.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span><span class="o">.</span><span class="n">set_patch</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;np.add&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WritableTensorDataWithMask.get_norm"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.WritableTensorDataWithMask.get_norm">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span><span class="o">.</span><span class="n">_data</span></div>
+
+<div class="viewcode-block" id="WritableTensorDataWithMask.get_data"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.WritableTensorDataWithMask.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># return self._data/self._norm._data</span>
+        <span class="c1"># Temporary in-place normalization.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span></div>
+
+<div class="viewcode-block" id="WritableTensorDataWithMask.get_unnormalized_data"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.tensor.WritableTensorDataWithMask.get_unnormalized_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_unnormalized_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">WritableTensorData</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<span class="c1">########################################################################</span>
+<span class="c1">## Unit Testing</span>
+<span class="c1">########################################################################</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">unittest</span>
+
+    <span class="c1">####################################################################</span>
+    <span class="k">class</span> <span class="nc">UnitTestTensorData</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="k">def</span> <span class="nf">testCreation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">TensorData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span><span class="o">==</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="o">==</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">fov</span><span class="p">()</span><span class="o">==</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+            <span class="n">bb</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+            <span class="n">rg</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">range</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">bb</span><span class="o">==</span><span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">rg</span><span class="o">==</span><span class="n">Box</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">testGetPatch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c1"># (4,4,4) random 3D araray</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">TensorData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">get_patch</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]))</span>
+            <span class="n">T</span><span class="o">.</span><span class="n">set_fov</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">get_patch</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]))</span>
+
+
+    <span class="c1">####################################################################</span>
+    <span class="k">class</span> <span class="nc">UnitTestWritableTensorData</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="k">def</span> <span class="nf">testCreation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">WritableTensorData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span><span class="o">==</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="o">==</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">fov</span><span class="p">()</span><span class="o">==</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+            <span class="n">bb</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+            <span class="n">rg</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">range</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">bb</span><span class="o">==</span><span class="n">Box</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">rg</span><span class="o">==</span><span class="n">Box</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">testSetPatch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">WritableTensorData</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">get_patch</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))))</span>
+            <span class="n">T</span><span class="o">.</span><span class="n">set_patch</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">p</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">get_patch</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))))</span>
+
+    <span class="c1">####################################################################</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+
+    <span class="c1">####################################################################</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Seung Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

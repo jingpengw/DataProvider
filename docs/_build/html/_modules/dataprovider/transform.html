@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dataprovider.transform &mdash; DataProvider 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="DataProvider 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> DataProvider
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">DataProvider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">DataProvider</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>dataprovider.transform</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dataprovider.transform</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="n">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Functions for data transformation.</span>
+
+<span class="s2">Kisuk Lee &lt;kisuklee@mit.edu&gt;, 2016</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">vector</span> <span class="k">import</span> <span class="n">Vec3d</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">maximum</span>
+
+<div class="viewcode-block" id="transform_tensor"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.transform_tensor">[docs]</a><span class="k">def</span> <span class="nf">transform_tensor</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply func to each channel of data (4D tensor).&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">check_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">arrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">func</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">,</span><span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">arrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_tensor</span><span class="p">(</span><span class="n">vol</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">arrs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SampleFunction"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.SampleFunction">[docs]</a><span class="k">class</span> <span class="nc">SampleFunction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply 3D volume function to every volume in a data sample.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">transform_fn</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_sample</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transform_fn</span>
+
+    <span class="k">def</span> <span class="nf">_transform_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply func to a sample.&quot;&quot;&quot;</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">sample</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">ret</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">transform_tensor</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="TensorFunction"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.TensorFunction">[docs]</a><span class="k">class</span> <span class="nc">TensorFunction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply 3D volume function to each channel of 4D tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">transform_fn</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">transform_tensor</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transform_fn</span>
+
+<div class="viewcode-block" id="TensorFunction.evaluate"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.TensorFunction.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate tensor function specified by spec on data.&quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">transform_tensor</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">)</span></div></div>
+
+
+<span class="n">sample_func</span> <span class="o">=</span> <span class="n">SampleFunction</span><span class="p">()</span>
+<span class="n">tensor_func</span> <span class="o">=</span> <span class="n">TensorFunction</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="crop"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.crop">[docs]</a><span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO(kisuk): Documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Vec3d</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">-</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">offset</span><span class="p">))</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">v1</span>  <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+    <span class="n">v2</span>  <span class="o">=</span> <span class="n">v1</span> <span class="o">+</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">ret</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+<span class="c1">####################################################################</span>
+<span class="c1">## Preprocessing</span>
+<span class="c1">####################################################################</span>
+
+<div class="viewcode-block" id="mirror_border"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.mirror_border">[docs]</a><span class="k">def</span> <span class="nf">mirror_border</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">fov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO(kisuk) Documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="c1"># Validate FoV</span>
+    <span class="n">fov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+    <span class="n">fov</span> <span class="o">=</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;uint32&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Pad size</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="n">fov</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">btm</span> <span class="o">=</span> <span class="n">fov</span> <span class="o">-</span> <span class="n">top</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pad_with</span> <span class="o">=</span> <span class="p">[(</span><span class="n">top</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">btm</span><span class="p">[</span><span class="mi">0</span><span class="p">]),(</span><span class="n">top</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">btm</span><span class="p">[</span><span class="mi">1</span><span class="p">]),(</span><span class="n">top</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">btm</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>
+    <span class="c1"># TODO(kisuk): Should we force an odd-sized fov?</span>
+
+    <span class="c1"># TODO(kisuk): &#39;symmetric&#39; or &#39;reflect&#39;?</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pad_with</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="standardize"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.standardize">[docs]</a><span class="k">def</span> <span class="nf">standardize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;2D&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Standard normalization (zero mean, unit standard deviation).&quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># Standardize function (zero mean &amp; unit standard deviation).</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;2D&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">ret</span><span class="p">[</span><span class="n">z</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">z</span><span class="p">,:,:])</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;3D&#39;</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;mode must be either &#39;2D&#39; or &#39;3D&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="rescale"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.rescale">[docs]</a><span class="k">def</span> <span class="nf">rescale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rescale.&quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># Rescale to [min_val, max_val].</span>
+    <span class="n">ret</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">img</span>
+    <span class="n">ret</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">ptp</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">*=</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="n">min_val</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="divideby"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.divideby">[docs]</a><span class="k">def</span> <span class="nf">divideby</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mf">255.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rescale.&quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">ret</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">img</span>
+    <span class="n">ret</span> <span class="o">/=</span> <span class="n">val</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<span class="c1">####################################################################</span>
+<span class="c1">## Data Augmentations</span>
+<span class="c1">####################################################################</span>
+
+<div class="viewcode-block" id="flip"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.flip">[docs]</a><span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rule</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Flip data according to a specified rule.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: 3D numpy array to be transformed.</span>
+<span class="sd">        rule: Transform rule, specified as a Boolean array.</span>
+<span class="sd">             [z reflection,</span>
+<span class="sd">              y reflection,</span>
+<span class="sd">              x reflection,</span>
+<span class="sd">              xy transpose]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        data: Transformed data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">check_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span>
+
+    <span class="c1"># z reflection</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:]</span>
+    <span class="c1"># y reflection</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
+    <span class="c1"># x reflection</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,:,:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Transpose in xy.</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="revert_flip"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.revert_flip">[docs]</a><span class="k">def</span> <span class="nf">revert_flip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rule</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO(kisuk): Documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">check_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span>
+
+    <span class="c1"># Special treat for affinity.</span>
+    <span class="n">is_affinity</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">dst</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">is_affinity</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">dz</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">dx</span><span class="p">)</span> <span class="o">=</span> <span class="n">dst</span>
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span>
+        <span class="k">assert</span> <span class="n">dx</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">dy</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">dz</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="c1"># Transpose in xy.</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># Swap x/y-affinity maps.</span>
+        <span class="k">if</span> <span class="n">is_affinity</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="o">...</span><span class="p">]</span>
+    <span class="c1"># x reflection</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,:,:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Special treatment for x-affinity.</span>
+        <span class="k">if</span> <span class="n">is_affinity</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,</span><span class="n">dx</span><span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">]</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,:</span><span class="n">dx</span><span class="p">]</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,</span><span class="n">dx</span><span class="p">:]</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,</span><span class="o">-</span><span class="n">dx</span><span class="p">:]</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># y reflection</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
+        <span class="c1"># Special treatment for y-affinity.</span>
+        <span class="k">if</span> <span class="n">is_affinity</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,</span><span class="n">dy</span><span class="p">:,:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:]</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,:</span><span class="n">dy</span><span class="p">,:]</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dy</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,</span><span class="n">dy</span><span class="p">:,:]</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,</span><span class="o">-</span><span class="n">dy</span><span class="p">:,:]</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># z reflection</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:]</span>
+        <span class="c1"># Special treatment for z-affinity.</span>
+        <span class="k">if</span> <span class="n">is_affinity</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dz</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="n">dz</span><span class="p">:,:,:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:]</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,:</span><span class="n">dz</span><span class="p">,:,:]</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dz</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="n">dz</span><span class="p">:,:,:]</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="n">dz</span><span class="p">:,:,:]</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<span class="c1">####################################################################</span>
+<span class="c1">## Label Transformations</span>
+<span class="c1">####################################################################</span>
+
+<div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Binarize image.</span>
+
+<span class="sd">    Normally used to turn a ground truth segmentation into a ground truth</span>
+<span class="sd">    boundary map, binary representation for each voxel being neuronal boundary</span>
+<span class="sd">    or not.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        img: 3D indexed image, with each index corresponding to each segment.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ret: Binarized image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">ret</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="multiclass_expansion"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.multiclass_expansion">[docs]</a><span class="k">def</span> <span class="nf">multiclass_expansion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO(kisuk): Semantic segmentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,)</span> <span class="o">+</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">ret</span><span class="p">[</span><span class="n">l</span><span class="p">,</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span> <span class="o">==</span> <span class="n">l</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="binary_class"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.binary_class">[docs]</a><span class="k">def</span> <span class="nf">binary_class</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO(kisuk): Documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">multiclass_expansion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="affinitize"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.affinitize">[docs]</a><span class="k">def</span> <span class="nf">affinitize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform segmentation to 3D affinity graph.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        img: 3D indexed image, with each index corresponding to each segment.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ret: 3D affinity graph (4D tensor), 3 channels for z, y, x direction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,)</span> <span class="o">+</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">dz</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">dx</span><span class="p">)</span> <span class="o">=</span> <span class="n">dst</span>
+
+    <span class="c1"># z-affinity.</span>
+    <span class="k">assert</span> <span class="n">dz</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dz</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="n">dz</span><span class="p">:,:,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">dz</span><span class="p">:,:,:]</span><span class="o">==</span><span class="n">img</span><span class="p">[:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">dz</span><span class="p">:,:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dz</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">2</span><span class="p">,:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">dz</span><span class="p">:,:,:]</span><span class="o">==</span><span class="n">img</span><span class="p">[:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">dz</span><span class="p">:,:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># y-affinity.</span>
+    <span class="k">assert</span> <span class="n">dy</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,</span><span class="n">dy</span><span class="p">:,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,</span><span class="n">dy</span><span class="p">:,:]</span><span class="o">==</span><span class="n">img</span><span class="p">[:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,</span><span class="n">dy</span><span class="p">:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,</span><span class="n">dy</span><span class="p">:,:]</span><span class="o">==</span><span class="n">img</span><span class="p">[:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,</span><span class="n">dy</span><span class="p">:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># x-affinity.</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,</span><span class="n">dx</span><span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,:,</span><span class="n">dx</span><span class="p">:]</span><span class="o">==</span><span class="n">img</span><span class="p">[:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,:,</span><span class="n">dx</span><span class="p">:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,:,</span><span class="n">dx</span><span class="p">:]</span><span class="o">==</span><span class="n">img</span><span class="p">[:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">img</span><span class="p">[:,:,</span><span class="n">dx</span><span class="p">:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+<span class="c1">####################################################################</span>
+<span class="c1">## Mask Transformations</span>
+<span class="c1">####################################################################</span>
+
+<div class="viewcode-block" id="affinitize_mask"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.affinitize_mask">[docs]</a><span class="k">def</span> <span class="nf">affinitize_mask</span><span class="p">(</span><span class="n">msk</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform binary mask to affinity mask.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        msk: 3D binary mask.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ret: 3D affinity mask (4D tensor), 3 channels for z, y, x direction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msk</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">msk</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,)</span> <span class="o">+</span> <span class="n">msk</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">dz</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">dx</span><span class="p">)</span> <span class="o">=</span> <span class="n">dst</span>
+
+    <span class="c1"># z-affinity.</span>
+    <span class="k">assert</span> <span class="n">dz</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">msk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dz</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="n">dz</span><span class="p">:,:,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">msk</span><span class="p">[</span><span class="n">dz</span><span class="p">:,:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dz</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">2</span><span class="p">,:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">msk</span><span class="p">[</span><span class="n">dz</span><span class="p">:,:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:</span><span class="o">-</span><span class="n">dz</span><span class="p">,:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># y-affinity.</span>
+    <span class="k">assert</span> <span class="n">dy</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">msk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,</span><span class="n">dy</span><span class="p">:,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,</span><span class="n">dy</span><span class="p">:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">,:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,</span><span class="n">dy</span><span class="p">:,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,:</span><span class="o">-</span><span class="n">dy</span><span class="p">,:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># x-affinity.</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">msk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,</span><span class="n">dx</span><span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,:,</span><span class="n">dx</span><span class="p">:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,:,</span><span class="n">dx</span><span class="p">:]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">msk</span><span class="p">[:,:,:</span><span class="o">-</span><span class="n">dx</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+<span class="c1">####################################################################</span>
+<span class="c1">## Rebalancing</span>
+<span class="c1">####################################################################</span>
+
+<div class="viewcode-block" id="rebalance_class"><a class="viewcode-back" href="../../dataprovider.html#dataprovider.transform.rebalance_class">[docs]</a><span class="k">def</span> <span class="nf">rebalance_class</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO(kisuk): Documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">check_volume</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">num_lbls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">unique_lbl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="n">unique_lbl</span><span class="p">:</span>
+        <span class="n">num_lbl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">img</span><span class="o">==</span><span class="n">lbl</span><span class="p">)</span>
+        <span class="n">num_lbls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num_lbl</span><span class="p">)</span>
+    <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">num_lbls</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_lbls</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># TODO(kisuk):</span>
+        <span class="c1">#   This is to make rebalancing exactly the same as in ZNNv1 and v4,</span>
+        <span class="c1">#   but not sure about how reasonable this value (0.5) is, and about</span>
+        <span class="c1">#   if this can also be applied to multiclass case (e.g. semantic</span>
+        <span class="c1">#   segmentation).</span>
+        <span class="n">ret</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">num_lbls</span><span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_lbl</span><span class="p">):</span>
+            <span class="n">ret</span><span class="p">[</span><span class="n">img</span><span class="o">==</span><span class="n">lbl</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+<span class="c1">########################################################################</span>
+<span class="c1">## Unit Testing</span>
+<span class="c1">########################################################################</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">unittest</span>
+
+    <span class="c1">####################################################################</span>
+    <span class="k">class</span> <span class="nc">UnitTestTransform</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="k">def</span> <span class="nf">testCrop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">img</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+
+    <span class="c1">####################################################################</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+
+    <span class="c1">####################################################################</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Seung Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
