@@ -1,6 +1,6 @@
 from __future__ import print_function
 import numpy as np
-import time
+#import time
 
 from ..box import centered_box
 from ..tensor import WritableTensorData as WTD, WritableTensorDataWithMask as WTDM
@@ -11,6 +11,7 @@ def prepare_outputs(spec, locs, blend=False, blend_mode=''):
     b = blend_mode.lower()
     if b not in blend_pool:
         raise RuntimeError('unknown output blend type [%s]' % b)
+
     if b == '':
         b = 'Blend'
     else:
@@ -106,11 +107,11 @@ class BumpBlend(Blend):
         """Blend with data."""
         for k, v in sample.items():
             assert k in self.data
-            t0 = time.time()
+            #t0 = time.time()
             mask = self._get_mask(k, loc)
-            t1 = time.time() - t0
+            #t1 = time.time() - t0
             self.data[k].set_patch(loc, v, op=self.op, mask=mask)
-            t2 = time.time() - t0
+            #t2 = time.time() - t0
             # print('get_mask: %.3f, set_patch: %.3f' % (t1, t2-t1))
 
     ####################################################################
