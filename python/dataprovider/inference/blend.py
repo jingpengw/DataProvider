@@ -108,23 +108,23 @@ class BumpBlend(Blend):
         for k, v in sample.items():
             assert k in self.data
             #t0 = time.time()
-            mask = self._get_mask(k, loc)
+            mask = self.get_mask(k, loc)
             #t1 = time.time() - t0
             self.data[k].set_patch(loc, v, op=self.op, mask=mask)
             #t2 = time.time() - t0
             # print('get_mask: %.3f, set_patch: %.3f' % (t1, t2-t1))
 
-    ####################################################################
-    ## Private methods.
-    ####################################################################
-
-    def _get_mask(self, key, loc):
+    def get_mask(self, key, loc):
         mask = None
         if self.blend:
             assert key in self.max_logits
             max_logit = self.max_logits[key].get_patch(loc)
             mask = self._bump_map(max_logit.shape[-3:], max_logit[0,...])
         return mask
+
+    ####################################################################
+    ## Private methods.
+    ####################################################################
 
     def _bump_logit(self, z, y, x, t=1.5):
         return -(x*(1-x))**(-t)-(y*(1-y))**(-t)-(z*(1-z))**(-t)
@@ -145,3 +145,73 @@ class BumpBlend(Blend):
 
     def _bump_map(self, dim, max_logit):
         return np.exp(self._bump_logit_map(dim) - max_logit)
+
+
+class AlignedBumpBlend(BumpBlend):
+    """
+    Blending with bump function.
+    """
+
+    def __init__(self, spec, locs, blend=False):
+        """Initialize BumpBlend."""
+        super(AlignedBumpBlend, self).__init__(spec, locs, blend)
+
+        self.patchMask = None
+        if self.blend:
+            self.fov = self.data.values[0].fov()
+            self.patchMask = _make_mask(fov)
+
+    def get_mask(self, key, loc):
+        """
+        no matter where the patch is, always use the same normalization mask
+        """
+        return self.patchMask
+
+    ####################################################################
+    ## Private methods.
+    ####################################################################
+
+    @property
+    def stride(self):
+        stride_ratio = self.spec['scan_params']['stride']
+        return map(lambda f,r:f*r, self.fov, stride_ratio)
+
+    def _make_mask( self ):
+        """
+            _make_mask( size )
+        params:
+            size:tuple of int
+        return:
+            an numpy array with data type of float32. The value was generated
+            using a bump function. the overlapping borders and corners were
+            normalized according to weight accumulation.
+            https://en.wikipedia.org/wiki/Bump_function
+        """
+        stride = self.stride
+        fov = self.fov
+        bumpMap = bump_map( fov )
+        # use 3x3x3 mask addition to figure out the normalization parameter
+		# this is a simulation of blending
+        baseMask = np.zeros( tuple(map(lambda f,s: f+2*s, fov, stride)), \
+                                                        dtype=np.float32 )
+        for nz in range(3):
+            for ny in range(3):
+                for nx in range(3):
+                    baseMask[nz*stride[0]:nz*stride[0]+fov[0], \
+                             ny*stride[1]:ny*stride[1]+fov[1], \
+                             nx*stride[2]:nx*stride[2]+fov[2]] += bumpMap
+        self.patchMask = bumpMap / baseMask[stride[0]:stride[0]+fov[0], \
+                                            stride[1]:stride[1]+fov[1], \
+                                            stride[2]:stride[2]+fov[2]]
+
+    def _bump_map( dim ):
+        x = range(dim[-1])
+        y = range(dim[-2])
+        z = range(dim[-3])
+        zv, yv, xv = np.meshgrid(z, y, x, indexing='ij')
+        xv = (xv+1.0)/(dim[-1]+1.0) * 2.0 - 1.0
+        yv = (yv+1.0)/(dim[-2]+1.0) * 2.0 - 1.0
+        zv = (zv+1.0)/(dim[-3]+1.0) * 2.0 - 1.0
+        return 	np.exp(-1.0/(1.0-xv*xv)) * \
+				np.exp(-1.0/(1.0-yv*yv)) * \
+				np.exp(-1.0/(1.0-zv*zv))
