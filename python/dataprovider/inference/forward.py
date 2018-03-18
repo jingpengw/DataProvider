@@ -1,12 +1,10 @@
 from __future__ import print_function
-import numpy as np
 import math
-import time
 
 from . import blend
-from ..box import Box, centered_box
-from ..tensor import WritableTensorData as WTD, WritableTensorDataWithMask as WTDM
-from ..vector import *
+from ..box import centered_box
+# from ..tensor import WritableTensorData as WTD, WritableTensorDataWithMask as WTDM
+from ..vector import Vec3d
 
 
 class ForwardScanner(object):
@@ -185,4 +183,6 @@ class ForwardScanner(object):
         # Prepare outputs.
         blend_mode = self.params.get('blend', '')
         self.outputs = blend.prepare_outputs(self.scan_spec, self.locs,
-                                    blend=overlap, blend_mode=blend_mode)
+                                             blend=overlap,
+                                             blend_mode=blend_mode,
+                                             stride=self.stride)

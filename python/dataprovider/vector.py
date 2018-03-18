@@ -36,11 +36,11 @@ class Vec3d(object):
         return 3
 
     def __getitem__(self, key):
-        if key == 0:
+        if key == 0 or key == -3:
             return self.x
-        elif key == 1:
+        elif key == 1 or key == -2:
             return self.y
-        elif key == 2:
+        elif key == 2 or key == -1:
             return self.z
         else:
             raise IndexError("Invalid subscript "+str(key)+" to Vec3d")

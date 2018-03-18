@@ -1,10 +1,9 @@
 from __future__ import print_function
-import math
 import numpy as np
 import time
 
-from .box import *
-from .vector import *
+from .box import Box, centered_box
+from .vector import Vec3d
 
 class TensorData(object):
     """
@@ -23,14 +22,14 @@ class TensorData(object):
         _rg:     Range. (update dep.: dim, offset, fov)
     """
 
-    def __init__(self, data, fov=(0,0,0), offset=(0,0,0)):
+    def __init__(self, data, fov=(0, 0, 0), offset=(0, 0, 0)):
         """Initialize a TensorData object."""
         # Set immutable attributes.
-        self._data   = self._check_data(data)
-        self._dim    = Vec3d(self._data.shape[-3:])
+        self._data = self._check_data(data)
+        self._dim = Vec3d(self._data.shape[-3:])
         self._offset = Vec3d(offset)
         # Set bounding box.
-        self._bb = Box((0,0,0), self._dim)
+        self._bb = Box((0, 0, 0), self._dim)
         self._bb.translate(self._offset)
         # Set fov (patch size).
         self.set_fov(fov)
@@ -39,10 +38,10 @@ class TensorData(object):
         """Set a nonnegative field of view (FoV), i.e., patch size."""
         # Zero FoV indicates covering the whole volume.
         fov = Vec3d(fov)
-        if fov == (0,0,0):
+        if fov == (0, 0, 0):
             fov = Vec3d(self._dim)
         # FoV should be nonnegative, and smaller than data dimension.
-        assert fov==minimum(maximum(fov,(0,0,0)), self._dim)
+        assert fov == np.minimum(np.maximum(fov, (0, 0, 0)), self._dim)
         # Set FoV.
         self._fov = fov
         # Update range.
@@ -65,6 +64,10 @@ class TensorData(object):
     ####################################################################
     ## Public methods for accessing attributes.
     ####################################################################
+
+    @property
+    def data(self):
+        return self._data
 
     def get_data(self):
         return self._data
@@ -126,10 +129,10 @@ class WritableTensorData(TensorData):
         Initialize a writable tensor data, or create a new tensor of zeros.
         """
         if isinstance(data_or_shape, np.ndarray):
-            TensorData.__init__(self, data_or_shape, fov, offset)
+            super().__init__(data_or_shape, fov, offset)
         else:
             data = np.full(data_or_shape, 0, dtype='float32')
-            TensorData.__init__(self, data, fov, offset)
+            super().__init__(data, fov, offset)
 
     def set_patch(self, pos, patch, op=None):
         """Write a patch of size _fov centered on pos."""
@@ -148,7 +151,8 @@ class WritableTensorData(TensorData):
         if op is None:
             exec('{}={}'.format(lval, rval))
         else:
-            exec('{}={}({},{})'.format(lval, op, lval, rval))
+            # inplace operation
+            exec('{}({},{},{})'.format(op, lval, rval, lval))
 
 
 class WritableTensorDataWithMask(WritableTensorData):
@@ -160,7 +164,7 @@ class WritableTensorDataWithMask(WritableTensorData):
         """
         Initialize a writable tensor data, or create a new tensor of zeros.
         """
-        WritableTensorData.__init__(self, data_or_shape, fov, offset)
+        super().__init__(data_or_shape, fov, offset)
 
         # Set norm.
         self._norm = WritableTensorData(self.dim(), fov, offset)
@@ -169,17 +173,21 @@ class WritableTensorDataWithMask(WritableTensorData):
         """Write a patch of size _fov centered on pos."""
         # Default mask.
         if mask is None:
-            mask = np.ones(patch.shape[-3:], dtype='float32')
+            super().set_patch(self, pos, patch, op)
         else:
             mask = self._check_volume(mask)
-        # Set patch.
-        t0 = time.time()
-        WritableTensorData.set_patch(self, pos, patch*mask, op)
-        t1 = time.time() - t0
-        # Set normalization.
-        self._norm.set_patch(pos, mask, op='np.add')
-        t2 = time.time() - t0
-        # print('set_patch: %.3f, set_mask: %.3f' % (t1, t2-t1))
+            # Set patch.
+            t0 = time.time()
+            super().set_patch(self, pos, patch*mask, op)
+            t1 = time.time() - t0
+            # Set normalization.
+            self._norm.set_patch(pos, mask, op='np.add')
+            t2 = time.time() - t0
+            print('set_patch: %.3f, set_mask: %.3f' % (t1, t2-t1))
+
+    @property
+    def norm(self):
+        return self._norm.data
 
     def get_norm(self):
         return self._norm._data
@@ -187,11 +195,11 @@ class WritableTensorDataWithMask(WritableTensorData):
     def get_data(self):
         # return self._data/self._norm._data
         # Temporary in-place normalization.
-        self._data = np.divide(self._data, self._norm._data, self._data)
+        self._data /= self.norm
         return self._data
 
     def get_unnormalized_data(self):
-        return WritableTensorData.get_data(self)
+        return super().get_data()
 
     ####################################################################
     ## Private helper methods.

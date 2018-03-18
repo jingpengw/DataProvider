@@ -39,10 +39,16 @@ def imsave(data, fname):
         fname: Name of the file to save (hdf5 or tiff).
     """
     if '.hdf5' in fname or '.h5' in fname:
-        f = h5py.File(fname)
-        f.create_dataset('/main', data=data)
-        f.close()
+        with h5py.File(fname, 'w') as f:
+            f['main'] = data
     elif '.tif' in fname:
-        tifffile.imsave(fname, data)
+        if data.ndim <= 3:
+            tifffile.imsave(fname, data)
+        elif data.ndim == 4:
+            tifffile.imsave(fname, data[0,:,:,:])
+        elif data.ndim == 5:
+            tifffile.imsave(fname, data[0,0,:,:,:])
+        else:
+            raise RuntimeError('only support less than 5 dimensional array')
     else:
         raise RuntimeError("only hdf5 and tiff formats are supported")
