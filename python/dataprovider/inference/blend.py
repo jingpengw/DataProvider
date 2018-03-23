@@ -8,6 +8,7 @@ from ..tensor import WritableTensorData as WTD, \
     WritableTensorDataWithMask as WTDM
 from ..emio import imsave
 
+
 def prepare_outputs(spec, locs, blend=False, blend_mode='', stride=None):
     blend_pool = ['', 'bump', 'aligned-bump']
     b = blend_mode.lower()
@@ -87,9 +88,9 @@ class BumpBlend(Blend):
     Blending with bump function.
     """
 
-    def __init__(self, spec, locs, blend=False, **kwargs):
+    def __init__(self, spec, locs, blend=False, stride=None):
         """Initialize BumpBlend."""
-        super().__init__(self, spec, locs, blend, **kwargs)
+        super().__init__(spec, locs, blend=blend, stride=stride)
 
         self.logit_maps = dict()
 
@@ -172,7 +173,8 @@ class AlignedBumpBlend(Blend):
             if all(np.less_equal(stride, 1.0)):
                 # this is in percentile, need to transform to voxel based
                 fov = list(self.data.values()).fov()
-                stride_by_voxel = (f-math.ceil(f*s) for (f, s) in zip(fov, stride))
+                stride_by_voxel = (f-math.ceil(f*s) for (f, s) in
+                                   zip(fov, stride))
             else:
                 stride_by_voxel = stride
             print('stride: {}'.format(stride))
@@ -187,9 +189,11 @@ class AlignedBumpBlend(Blend):
     def push(self, loc, sample):
         """Write to data."""
         for k, v in sample.items():
-            # assert np.less_equal(v, 1.0).all()
+            t0 = time.time()
             np.multiply(v, self.patch_masks[k], v)
             self.data[k].set_patch(loc, v, op='np.add')
+            t1 = time.time() - t0
+            print('blending: %.3f sec' % t1)
 
     ####################################################################
     ## Private methods.

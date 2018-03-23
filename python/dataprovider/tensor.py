@@ -173,12 +173,12 @@ class WritableTensorDataWithMask(WritableTensorData):
         """Write a patch of size _fov centered on pos."""
         # Default mask.
         if mask is None:
-            super().set_patch(self, pos, patch, op)
+            super().set_patch(pos, patch, op)
         else:
             mask = self._check_volume(mask)
             # Set patch.
             t0 = time.time()
-            super().set_patch(self, pos, patch*mask, op)
+            super().set_patch(pos, patch*mask, op)
             t1 = time.time() - t0
             # Set normalization.
             self._norm.set_patch(pos, mask, op='np.add')
