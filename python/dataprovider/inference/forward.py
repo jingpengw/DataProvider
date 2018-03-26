@@ -3,8 +3,9 @@ import math
 
 from . import blend
 from ..box import centered_box
-# from ..tensor import WritableTensorData as WTD, WritableTensorDataWithMask as WTDM
 from ..vector import Vec3d
+from ..offset_array import OffsetArray
+from cloudvolume.lib import Bbox
 
 
 class ForwardScanner(object):
@@ -20,6 +21,11 @@ class ForwardScanner(object):
     def __init__(self, dataset, scan_spec, params=None):
         """
         Initialize ForwardScanner.
+        args:
+            dataset (WritableTensorData or WritableTensorDataWithMask)
+            scan_spec (dict(output_key=patch_size)): \
+                dict(affinity=(3,18,256,256))
+            params (dict): other parameters
         """
         self._init()
 
@@ -153,7 +159,7 @@ class ForwardScanner(object):
             stride = self.default_stride[dim]
         # Overlapping stride given by an overlapping ratio.
         elif stride > 0 and stride < 1:
-            stride = math.ceil(stride * self.default_stride[dim])
+            stride = math.round(stride * self.default_stride[dim])
         self.stride[dim] = int(stride)
         stride = self.stride[dim]
 
@@ -186,3 +192,45 @@ class ForwardScanner(object):
                                              blend=overlap,
                                              blend_mode=blend_mode,
                                              stride=self.stride)
+
+
+class AlignedPatchForwardScanner(object):
+    """
+    forward pass for aligned patches
+    """
+    def __init__(self, output_buffer, scan_spec, output_bbox, params=None):
+        """
+        args:
+            output_buffer (OffsetArray)
+        """
+        assert isinstance(buffer_chunk, OffsetArray)
+
+    def pull(self):
+        """
+        TODO(kisuk): Documentation.
+        """
+        ret = None
+        if self.counter < len(self.locs):
+            assert self.current is None
+            idx = self.counter
+            loc = self.locs[idx]
+            print('({}/{}) loc: {}'.format(idx+1, len(self.locs), tuple(loc)))
+            ret = self.dataset.get_sample(loc)
+            self.current = loc
+            self.counter += 1
+        return ret
+
+    def push(self, sample):
+        """
+        TODO(kisuk): Documentation
+
+        Args:
+            sample:
+            kwargs:
+        """
+        assert self.current is not None
+        self.outputs.push(self.current, sample)
+        self.current = None
+
+
+

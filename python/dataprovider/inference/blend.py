@@ -173,7 +173,7 @@ class AlignedBumpBlend(Blend):
             if all(np.less_equal(stride, 1.0)):
                 # this is in percentile, need to transform to voxel based
                 fov = list(self.data.values()).fov()
-                stride_by_voxel = (f-math.ceil(f*s) for (f, s) in
+                stride_by_voxel = (f-math.round(f*s) for (f, s) in
                                    zip(fov, stride))
             else:
                 stride_by_voxel = stride
